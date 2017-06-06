@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -25,8 +24,7 @@ SECRET_KEY = 'lk4y080u8dtgcl0kb863%!0r5v==+rjfg6unwvk8mftzvm2$nh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["10.0.0.149", "202.120.38.209", "localhost", "127.0.0.1"]
 
 # Application definition
 
@@ -55,7 +53,7 @@ ROOT_URLCONF = 'django_prof.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'musicsearch', 'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -71,7 +69,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_prof.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -81,7 +78,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -101,7 +97,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -115,8 +110,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+MUSIC_DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    MUSIC_DATA_DIR
+]
