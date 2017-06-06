@@ -1,0 +1,3 @@
+NOT NULL constraint failed: musicsearch_album.name
+Failed to insert Album 0
+

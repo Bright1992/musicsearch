@@ -85,15 +85,26 @@ def import_albums(path):
                     name = s['name']
                 except:
                     print("Warning: album id {} has no name!".format(a))
+                    name="NULL"
                 try:
                     pic_url = s['picUrl']
+                    if pic_url is None:
+                        print("Warning: album id {} has no pic!".format(a))
                 except:
                     print("Warning: album id {} has no pic!".format(a))
                 try:
                     publist_time = s['publishTime']
                 except:
                     print("Warning: album id {} has no publish time!".format(a))
-                Album(album_id=int(a), name=name, pic_url=pic_url, publish_time=publist_time).save()
+                    publist_time=-1
+                try:
+                    Album(album_id=int(a), name=name, pic_url=pic_url, publish_time=publist_time).save()
+                except Exception as e:
+                    print(e)
+                    print("Failed to insert Album {}".format(int(a)))
+                    with open("/home/bright/musicsearch/import_log","a+") as logf:
+                        logf.write(e.__str__()+"\n")
+                        logf.write("Failed to insert Album {}\n\n".format(int(a)))
         else:
             raise IsADirectoryError
 

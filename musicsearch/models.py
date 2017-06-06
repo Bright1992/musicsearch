@@ -12,7 +12,7 @@ class Artist(models.Model):
 class Album(models.Model):
     album_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=150)
-    pic_url = models.CharField(max_length=1024)
+    pic_url = models.CharField(max_length=1024, null=True, blank=True)
     publish_time = models.IntegerField(default=1)
 
 
