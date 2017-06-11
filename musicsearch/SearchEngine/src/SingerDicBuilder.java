@@ -9,7 +9,7 @@ public class SingerDicBuilder
 {
     public static void main(String[] args) throws Exception
     {
-        String dataPath = "./data/meta_data/songs";
+        String dataPath = "../../../data/meta_data/songs";
         System.out.println("building singer dictionary...");
         buildSingerDic(dataPath);
         System.out.println("done");
@@ -29,7 +29,7 @@ public class SingerDicBuilder
             reader.readLine();
             reader.readLine();
             String singer = reader.readLine().split("[\\[|\\]]")[1].trim();
-            Collections.addAll(singers, singer.split("['|,]"));
+            Collections.addAll(singers, singer.toLowerCase().split("['|,]"));
             reader.close();
         }
 
