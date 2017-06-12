@@ -28,7 +28,7 @@ public class SearchEngine
   private final String FieldPopularity = "popularity";
   private final String ActionUpdate = "update";
 
-  private final Double lrcThreshold = 3.0;
+  private final Double lrcThreshold = 1.0;
 
   class MyDoc
   {
@@ -249,29 +249,39 @@ public class SearchEngine
             break;
 
           case FieldAll:
-            if (singers.contains(value)) {
-              // 优先从词典中匹配歌手名
-              newDocs = searchField(FieldSinger, value);
-              System.out.printf("hits %d\n", newDocs.length);
-            }
-            else {
-              // 歌名
-              newDocs = searchField(FieldSong, value);
-              sortDocs(newDocs);
-              System.out.printf("hits %d\n", newDocs.length);
-              if (newDocs.length > 0) {
-                System.out.printf("song score %f \n", newDocs[0].score);
-              }
-              if (newDocs.length == 0 || newDocs[0].score < lrcThreshold) {
-                // 歌词优先级最低
-                newDocs = searchField(FieldLrc, value);
+            value=value.replace(",", " ");
+            String [] values=value.split(" ");
+            MyDoc[] cur_docs=null;
+            for(String v : values) {
+              if (singers.contains(v)) {
+                // 优先从词典中匹配歌手名
+                newDocs = searchField(FieldSinger, v);
+                System.out.printf("hits %d\n", newDocs.length);
+              } else {
+                // 歌名 & singer
+                newDocs=searchField(FieldSinger,v);
+                newDocs = unionDocs(searchField(FieldSong,v),newDocs);
                 sortDocs(newDocs);
                 System.out.printf("hits %d\n", newDocs.length);
                 if (newDocs.length > 0) {
-                  System.out.printf("lrc score %f \n", newDocs[0].score);
+                  System.out.printf("song score %f \n", newDocs[0].score);
+                }
+                if (newDocs.length == 0 || newDocs[0].score < lrcThreshold) {
+                  // 歌词优先级最低
+                  newDocs = searchField(FieldLrc, v);
+                  sortDocs(newDocs);
+                  System.out.printf("hits %d\n", newDocs.length);
+                  if (newDocs.length > 0) {
+                    System.out.printf("lrc score %f \n", newDocs[0].score);
+                  }
                 }
               }
+              if(cur_docs==null)
+                cur_docs=newDocs;
+              else
+                cur_docs=intersectDocs(cur_docs,newDocs);
             }
+            newDocs=cur_docs;
             break;
 
           default:
@@ -300,7 +310,7 @@ public class SearchEngine
       buf.append(d.toString());
       buf.append("\r\n");
     }
-
+//    System.out.println(buf.toString());
     return buf.toString();
   }
 
