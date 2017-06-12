@@ -22,12 +22,22 @@
       <file leaf-file-name="SearchEngine.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SearchEngine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="107" column="19" lean-forward="false" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="19" />
+            <state relative-caret-position="112">
+              <caret line="477" column="66" lean-forward="false" selection-start-line="477" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Query.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lucene-4.0.0/core/lucene-core-4.0.0.jar!/org/apache/lucene/search/Query.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -124,6 +134,9 @@
       <find>fieldall</find>
       <find>highlightFiledValue</find>
       <find>singer</find>
+      <find>FieldAll</find>
+      <find>query</find>
+      <find>parser</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -643,7 +656,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/jdk1.8.0_131/src.zip!/java/nio/file/Path.java" />
     <entry file="jar://$USER_HOME$/jdk1.8.0_131/src.zip!/java/nio/file/Paths.java" />
     <entry file="jar://$PROJECT_DIR$/lucene-6.5.1/queries/lucene-queries-6.5.1.jar!/org/apache/lucene/queries/function/FunctionScoreQuery.class" />
     <entry file="jar://$USER_HOME$/jdk1.8.0_131/src.zip!/java/lang/Object.java" />
@@ -881,10 +893,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lucene-4.0.0/core/lucene-core-4.0.0.jar!/org/apache/lucene/search/Query.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/SearchEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="107" column="19" lean-forward="false" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="19" />
+        <state relative-caret-position="112">
+          <caret line="477" column="66" lean-forward="false" selection-start-line="477" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />

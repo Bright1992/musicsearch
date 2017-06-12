@@ -47,7 +47,7 @@ public class SearchEngine
       popularity = Double.valueOf(doc.get(FieldPopularity));
     }
 
-    public MyDoc(MyDoc lhs, MyDoc rhs)
+    public MyDoc(MyDoc lhs, MyDoc rhs) throws Exception
     {
       assert (lhs.id == rhs.id);
 
@@ -65,7 +65,7 @@ public class SearchEngine
       popularity = lhs.popularity;
     }
 
-    public MyDoc(MyDoc d, double newSore)
+    public MyDoc(MyDoc d, double newSore) throws Exception
     {
       score = newSore;
       doc = d.doc;
@@ -80,44 +80,48 @@ public class SearchEngine
       popularity = d.popularity;
     }
 
-    public void setField(String fieldName, String fieldValue, Query query)
+    public void setField(String fieldName, String fieldValue, Query query) throws Exception
     {
+      QueryParser parser = new QueryParser(Version.LUCENE_40, fieldName, analyzer);
       switch (fieldName) {
         case FieldSong:
           songQueried = true;
-          songQueryValue = fieldValue;
-          songQuery = query;
+          songQueryValue = songQueryValue+ " "+ fieldValue;
+          songQuery = parser.parse(songQueryValue);
           break;
 
         case FieldSinger:
           singerQueried = true;
-          singerQueryValue = fieldValue;
-          singerQuery = query;
+          singerQueryValue = singerQueryValue +" "+ fieldValue;
+          singerQuery = parser.parse(singerQueryValue);
           break;
 
         case FieldLrc:
           lrcQueried = true;
-          lrcQueryValue = fieldValue;
-          lrcQuery = query;
+          lrcQueryValue = lrcQueryValue+ " "+ fieldValue;
+          lrcQuery = parser.parse(lrcQueryValue);
       }
     }
 
-    public void setField(MyDoc doc)
+    public void setField(MyDoc doc) throws Exception
     {
       if (doc.songQueried) {
+        QueryParser parser = new QueryParser(Version.LUCENE_40, FieldSong, analyzer);
         songQueried = true;
-        songQueryValue = doc.songQueryValue;
-        songQuery = doc.songQuery;
+        songQueryValue = songQueryValue+" "+doc.songQueryValue;
+        songQuery = parser.parse(songQueryValue);
       }
       if (doc.singerQueried) {
+        QueryParser parser = new QueryParser(Version.LUCENE_40, FieldSong, analyzer);
         singerQueried = true;
-        singerQueryValue = doc.singerQueryValue;
-        singerQuery = doc.singerQuery;
+        singerQueryValue = singerQueryValue+" "+ doc.singerQueryValue;
+        singerQuery = parser.parse(singerQueryValue);
       }
       if (doc.lrcQueried) {
+        QueryParser parser = new QueryParser(Version.LUCENE_40, FieldSong, analyzer);
         lrcQueried = true;
-        lrcQueryValue = doc.lrcQueryValue;
-        lrcQuery = doc.lrcQuery;
+        lrcQueryValue = lrcQueryValue+" "+ doc.lrcQueryValue;
+        lrcQuery = parser.parse(lrcQueryValue);
       }
     }
 
@@ -152,15 +156,15 @@ public class SearchEngine
     public Document doc;
 
     public boolean songQueried = false;
-    public String songQueryValue;
+    public String songQueryValue="";
     public Query songQuery;
 
     public boolean singerQueried = false;
-    public String singerQueryValue;
+    public String singerQueryValue="";
     public Query singerQuery;
 
     public boolean lrcQueried = false;
-    public String lrcQueryValue;
+    public String lrcQueryValue="";
     public Query lrcQuery;
 
     public int id;
@@ -456,7 +460,7 @@ public class SearchEngine
     return tokens;
   }
 
-  private MyDoc[] intersectDocs(MyDoc[] a, MyDoc[] b)
+  private MyDoc[] intersectDocs(MyDoc[] a, MyDoc[] b) throws Exception
   {
     Vector<MyDoc> vec = new Vector<>();
     for (MyDoc d1 : a) {
@@ -471,7 +475,7 @@ public class SearchEngine
     return vec.toArray(arr);
   }
 
-  private MyDoc[] unionDocs(MyDoc[] a, MyDoc[] b)
+  private MyDoc[] unionDocs(MyDoc[] a, MyDoc[] b) throws Exception
   {
     Vector<MyDoc> vec = new Vector<>();
     Collections.addAll(vec, b);
@@ -480,6 +484,7 @@ public class SearchEngine
       for (MyDoc d2 : b) {
         if (d1.id == d2.id) {
           found = true;
+          d1=new MyDoc(d1,d2);
           break;
         }
       }
