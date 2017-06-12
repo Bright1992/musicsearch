@@ -202,7 +202,7 @@ public class SearchEngine
 
     try {
       while (true) {
-        String s = reader.readLine();
+        String s = reader.readLine().toLowerCase();
         if (!s.isEmpty()) {
           singers.add(s);
         }
@@ -228,8 +228,8 @@ public class SearchEngine
 
     try {
       for (Pair<String, String> p : query) {
-        String key = p.getKey();
-        String value = p.getValue();
+        String key = p.getKey().toLowerCase().trim();
+        String value = p.getValue().toLowerCase().trim();
         MyDoc[] newDocs = null;
         switch (key) {
 
@@ -249,38 +249,29 @@ public class SearchEngine
             break;
 
           case FieldAll:
-            value=value.replace(",", " ");
-            String [] values=value.split(" ");
-            MyDoc[] cur_docs=null;
-            for(String v : values) {
-              if (singers.contains(v)) {
-                // 优先从词典中匹配歌手名
-                newDocs = searchField(FieldSinger, v);
-                System.out.printf("hits %d\n", newDocs.length);
-              } else {
-                // 歌名
-                newDocs = searchField(FieldSong, v);
+            if (singers.contains(value)) {
+              // 优先从词典中匹配歌手名
+              newDocs = searchField(FieldSinger, value);
+              System.out.printf("hits %d\n", newDocs.length);
+            }
+            else {
+              // 歌名
+              newDocs = searchField(FieldSong, value);
+              sortDocs(newDocs);
+              System.out.printf("hits %d\n", newDocs.length);
+              if (newDocs.length > 0) {
+                System.out.printf("song score %f \n", newDocs[0].score);
+              }
+              if (newDocs.length == 0 || newDocs[0].score < lrcThreshold) {
+                // 歌词优先级最低
+                newDocs = searchField(FieldLrc, value);
                 sortDocs(newDocs);
                 System.out.printf("hits %d\n", newDocs.length);
                 if (newDocs.length > 0) {
-                  System.out.printf("song score %f \n", newDocs[0].score);
-                }
-                if (newDocs.length == 0 || newDocs[0].score < lrcThreshold) {
-                  // 歌词优先级最低
-                  newDocs = searchField(FieldLrc, v);
-                  sortDocs(newDocs);
-                  System.out.printf("hits %d\n", newDocs.length);
-                  if (newDocs.length > 0) {
-                    System.out.printf("lrc score %f \n", newDocs[0].score);
-                  }
+                  System.out.printf("lrc score %f \n", newDocs[0].score);
                 }
               }
-              if(cur_docs==null)
-                cur_docs=newDocs;
-              else
-                cur_docs=intersectDocs(cur_docs,newDocs);
             }
-            newDocs=cur_docs;
             break;
 
           default:
