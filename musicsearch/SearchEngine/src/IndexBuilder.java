@@ -55,7 +55,7 @@ public class IndexBuilder
             String publishTime = reader.readLine().split(":")[1].trim();
             String popularity = reader.readLine().split(":")[1].trim();
 
-            String lrc = readLrc(id, "./data/lyrics");
+            String lrc = readLrc(id, dataPath+"/../../lyrics");
 
             addDoc(indexWriter,
                     Integer.valueOf(id),
@@ -75,7 +75,6 @@ public class IndexBuilder
     private static String readLrc(String id, String path)
     {
         File lrc = new File(path + "/" +id + ".lrc");
-
         BufferedReader reader;
         try {
             reader =
