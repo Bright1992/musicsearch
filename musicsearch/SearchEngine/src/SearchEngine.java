@@ -16,6 +16,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Character;
 
 public class SearchEngine
 {
@@ -28,7 +29,9 @@ public class SearchEngine
   private final String FieldPopularity = "popularity";
   private final String ActionUpdate = "update";
 
-  private final Double lrcThreshold = 1.0;
+  private final double songThreshold=5;
+
+  private final double lrcThreshold = 0.5;
 
   class MyDoc
   {
@@ -270,7 +273,7 @@ public class SearchEngine
                 if (newDocs.length > 0) {
                   System.out.printf("song score %f \n", newDocs[0].score);
                 }
-                if (newDocs.length == 0 || newDocs[0].score < lrcThreshold) {
+                if (newDocs.length == 0) {
                   // 歌词优先级最低
                   newDocs = searchField(FieldLrc, v);
                   sortDocs(newDocs);
@@ -368,6 +371,15 @@ public class SearchEngine
     return ret;
   }
 
+  private boolean isLatin(String str){
+    for(int i=0;i<str.length();++i){
+      int cp=str.codePointAt(i);
+      if(cp>127)
+        return false;
+    }
+    return true;
+  }
+
   private MyDoc[] searchField(String name, String value) throws Exception
   {
     QueryParser parser = new QueryParser(Version.LUCENE_40, name, analyzer);
@@ -377,20 +389,38 @@ public class SearchEngine
       n=500;
     ScoreDoc[] sdocs = indexSearcher.search(query, 500).scoreDocs;
     MyDoc[] mdocs = new MyDoc[sdocs.length];
-
-
-    for (int i = 0; i < mdocs.length; ++i) {
-      mdocs[i] = new MyDoc(sdocs[i], query, name, value);
-
-      int id = mdocs[i].id;
-      int times = clickTimes.getOrDefault(id, 0);
-
-      mdocs[i].score = sdocs[i].score * (1 + Math.log(1 + times));
+    int hits=0;
+    double thres=0;
+    switch (name){
+      case "song":
+        if(isLatin(value))
+          thres=0;
+        else
+          thres=songThreshold;
+        break;
+      case "lrc":
+        thres=lrcThreshold;
+        break;
+      default:
+        thres = 0;
     }
 
-    System.out.println(query);
+    for (int i = 0; i < mdocs.length; ++i) {
+      if(sdocs[i].score>=thres) {
+        hits += 1;
+        mdocs[i] = new MyDoc(sdocs[i], query, name, value);
 
-    return mdocs;
+        int id = mdocs[i].id;
+        int times = clickTimes.getOrDefault(id, 0);
+
+        mdocs[i].score = sdocs[i].score * (1 + Math.log(1 + times));
+      }
+    }
+    MyDoc[] mdocs2=new MyDoc[hits];
+    for(int i=0;i<hits;++i)
+      mdocs2[i]=mdocs[i];
+    System.out.println(query);
+    return mdocs2;
   }
 
   private String highlightFiledValue(Query q, String fieldName, String text){

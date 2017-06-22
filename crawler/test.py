@@ -5,7 +5,7 @@ from .netease_crawler import crawler
 
 if __name__=='__main__':
     crawler.crawl_by_list([108406896])
-    # crawler.crawl_by_artist()
+    crawler.crawl_by_artist()
 
 # response = request.urlopen('http://music.163.com/playlist?id=26558065')
 # data = response.read()
